@@ -1,8 +1,7 @@
 export interface ProductTest {
-    id: string;
-    testerId: string;
-    productId: string;
-    reaction: string;
-    rating: number;
-    survivalStatus: boolean;
+  tester_id: number;
+  product_id: number;
+  reaction: string;
+  rating: number;
+  survival_status: number;
   }

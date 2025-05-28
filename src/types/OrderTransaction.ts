@@ -1,7 +1,17 @@
+
+import { Product } from './product';
+import { User } from './user';
+
+export enum TransactionStatus {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
 export interface OrderTransaction {
-    id: string;
-    clientId: string;
-    products: string[];
-    totalAmount: number;
-    paymentStatus: 'Paid' | 'Refunded' | 'Failed';
-  }
+  id: string;
+  client: User; // o al menos { id: string }
+  products: Product[]; // o al menos { id: string }[]
+  total_amount: number;
+  status: TransactionStatus;
+}

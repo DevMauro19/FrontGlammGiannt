@@ -1,12 +1,11 @@
-// src/components/EditProduct.tsx
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { Product } from '../types/product';
 
 const EditProduct: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const history = useHistory();
+  const navigate = useNavigate(); // ✅ reemplazo de useHistory
   const [product, setProduct] = useState<Product | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -39,7 +38,7 @@ const EditProduct: React.FC = () => {
     try {
       await axios.patch(`/makeup/${id}`, product);
       setSuccess('Producto actualizado exitosamente');
-      setTimeout(() => history.push('/products'), 1000);
+      setTimeout(() => navigate('/products'), 1000); // ✅ reemplazo de history.push
     } catch (err) {
       setError('Error al actualizar el producto: ' + (err as Error).message);
     }

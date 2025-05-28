@@ -1,6 +1,7 @@
 // src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import UsersPage from './Pages/UserPage';
 import ProductsPage from './Pages/Products';
 import ProductTestsPage from './Pages/Tests';
@@ -18,6 +19,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Navigate to="/users" />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/users/create" element={<CreateUser />} />
         <Route path="/users/edit/:id" element={<EditUser />} />

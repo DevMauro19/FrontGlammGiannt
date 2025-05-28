@@ -1,23 +1,20 @@
-// src/components/CreateOrderTransaction.tsx
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { User } from '../types/user';
 import { Product } from '../types/product';
-import { paymentStatus } from '../types/OrderTransaction';
+import { TransactionStatus } from '../types/OrderTransaction';
 
 const CreateOrderTransaction: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    client_id: '',
-    products: [] as string[], // Array de IDs de productos
+    client_id: '', // ID del cliente para el formulario
+    product_ids: [] as string[], // IDs de productos para el formulario
     total_amount: 0,
-    status: paymentStatus.PENDING, // Mapeado desde payment_status
+    status: TransactionStatus.PENDING, // Usamos TransactionStatus
   });
   const [users, setUsers] = useState<User[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedProducts, setSelectedProducts] = useState<string[]>([]); // Para manejar la selección dinámica
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -45,8 +42,7 @@ const CreateOrderTransaction: React.FC = () => {
 
   const handleProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(e.target.selectedOptions).map(option => option.value);
-    setSelectedProducts(selectedOptions);
-    setFormData(prev => ({ ...prev, products: selectedOptions }));
+    setFormData(prev => ({ ...prev, product_ids: selectedOptions }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,13 +51,18 @@ const CreateOrderTransaction: React.FC = () => {
     setSuccess(null);
 
     try {
-      await axios.post('/orders-transactions', {
-        ...formData,
-        id: undefined, // No enviamos el id, ya que el backend lo genera
-      });
+      // Mapear los datos del formulario al formato esperado por la API
+      const payload = {
+        client_id: formData.client_id,
+        product_ids: formData.product_ids, // Enviar IDs de productos
+        total_amount: formData.total_amount,
+        status: formData.status,
+      };
+
+      await axios.post('/orders-transactions', payload);
       setSuccess('Transacción creada exitosamente');
       setTimeout(() => navigate('/order-transactions'), 1000);
-    } catch (err) {
+    } catch (err: any) {
       setError('Error al crear la transacción: ' + (err.response?.data?.message || err.message));
     }
   };
@@ -89,12 +90,12 @@ const CreateOrderTransaction: React.FC = () => {
           </select>
         </div>
         <div>
-          <label htmlFor="products" className="block text-sm font-medium text-gray-700">Productos</label>
+          <label htmlFor="product_ids" className="block text-sm font-medium text-gray-700">Productos</label>
           <select
-            id="products"
-            name="products"
+            id="product_ids"
+            name="product_ids"
             multiple
-            value={selectedProducts}
+            value={formData.product_ids}
             onChange={handleProductChange}
             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
             required
@@ -115,6 +116,7 @@ const CreateOrderTransaction: React.FC = () => {
             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
             required
             min="0"
+            step="0.01"
           />
         </div>
         <div>
@@ -126,7 +128,7 @@ const CreateOrderTransaction: React.FC = () => {
             onChange={handleChange}
             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
           >
-            {Object.values(paymentStatus).map(status => (
+            {Object.values(TransactionStatus).map(status => (
               <option key={status} value={status}>{status}</option>
             ))}
           </select>

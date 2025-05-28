@@ -1,11 +1,10 @@
-// src/components/CreateProduct.tsx
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom'; // Para redirigir después de crear
+import { useNavigate } from 'react-router-dom'; // ✅ actualizado
 import axios from '../api/axios';
 import { Product } from '../types/product';
 
 const CreateProduct: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate(); // ✅ actualizado
   const [formData, setFormData] = useState<Partial<Product>>({
     name: '',
     description: '',
@@ -28,12 +27,11 @@ const CreateProduct: React.FC = () => {
     try {
       await axios.post('/makeup', formData);
       setSuccess('Producto creado exitosamente');
-      setTimeout(() => history.push('/products'), 1000); // Redirige a la lista
+      setTimeout(() => navigate('/products'), 1000); // ✅ actualizado
     } catch (err) {
       setError('Error al crear el producto: ' + (err as Error).message);
     }
   };
-
   return (
     <div className="container mx-auto p-4 max-w-md">
       <h1 className="text-2xl font-bold mb-4">Crear Nuevo Producto</h1>

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
-import { OrderTransaction, TransactionStatus } from '../types/orderTransaction';
+import { OrderTransaction, TransactionStatus } from '../types/OrderTransaction';
 import { User } from '../types/user';
 import { Product } from '../types/product';
 
@@ -30,7 +30,7 @@ const EditOrderTransaction: React.FC = () => {
         setSelectedProducts(transactionResponse.data.products.map((p: Product) => p.id));
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err: any) => {
         setError('Error al cargar datos: ' + (err.response?.data?.message || err.message));
         setLoading(false);
       });
@@ -38,17 +38,33 @@ const EditOrderTransaction: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setTransaction(prev => (prev ? {
-      ...prev,
-      [name]: name === 'total_amount' ? Number(value) : value,
-      ...(name === 'client_id' ? { client: { id: value } } : {}),
-    } : null));
+    setTransaction(prev => {
+      if (!prev) return null;
+  
+      const updatedTransaction = {
+        ...prev,
+        [name]: name === 'total_amount' ? Number(value) : value,
+      };
+  
+      if (name === 'client_id') {
+        updatedTransaction.client = { id: value };
+      }
+  
+      return updatedTransaction;
+    });
   };
-
+  
   const handleProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(e.target.selectedOptions).map(option => option.value);
     setSelectedProducts(selectedOptions);
-    setTransaction(prev => (prev ? { ...prev, products: selectedOptions.map(id => ({ id })) } : null));
+    setTransaction(prev => {
+      if (!prev) return null;
+  
+      return {
+        ...prev,
+        products: selectedOptions.map(id => ({ id })),
+      };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,7 +83,7 @@ const EditOrderTransaction: React.FC = () => {
       });
       setSuccess('Transacción actualizada exitosamente');
       setTimeout(() => navigate('/order-transactions'), 1000);
-    } catch (err) {
+    } catch (err: any) {
       setError('Error al actualizar la transacción: ' + (err.response?.data?.message || err.message));
     }
   };
