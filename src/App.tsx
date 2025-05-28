@@ -1,10 +1,10 @@
 // src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import UsersPage from './Pages/UsersPage';
-import ProductsPage from './Pages/ProductsPage';
-import ProductTestsPage from './Pages/ProductTestsPage';
-import OrderTransactionsPage from './Pages/OrderTransactionsPage';
+import UsersPage from './Pages/UserPage';
+import ProductsPage from './Pages/Products';
+import ProductTestsPage from './Pages/Tests';
+import OrderTransactionsPage from './Pages/orderTransactionsPage';
 import CreateUser from './components/CreateUser';
 import EditUser from './components/EditUser';
 import CreateProduct from './components/CreateProduct';

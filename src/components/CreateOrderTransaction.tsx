@@ -1,10 +1,11 @@
 // src/components/CreateOrderTransaction.tsx
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { User } from '../types/user';
 import { Product } from '../types/product';
-import { TransactionStatus } from '../types/orderTransaction';
+import { paymentStatus } from '../types/OrderTransaction';
 
 const CreateOrderTransaction: React.FC = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const CreateOrderTransaction: React.FC = () => {
     client_id: '',
     products: [] as string[], // Array de IDs de productos
     total_amount: 0,
-    status: TransactionStatus.PENDING, // Mapeado desde payment_status
+    status: paymentStatus.PENDING, // Mapeado desde payment_status
   });
   const [users, setUsers] = useState<User[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -125,7 +126,7 @@ const CreateOrderTransaction: React.FC = () => {
             onChange={handleChange}
             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
           >
-            {Object.values(TransactionStatus).map(status => (
+            {Object.values(paymentStatus).map(status => (
               <option key={status} value={status}>{status}</option>
             ))}
           </select>
