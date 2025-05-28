@@ -1,31 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import API from '../api/axios';
+import { getProductTests } from '../api/apiCalls';
+import { ProductTest } from '../types/productTest';
 
-interface Test {
-  id: number;
-  result: string;
-  date: string;
-}
-
-const Tests: React.FC = () => {
-  const [tests, setTests] = useState<Test[]>([]);
+const ProductTestsPage: React.FC = () => {
+  const [productTests, setProductTests] = useState<ProductTest[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    API.get('/tests')
-      .then(res => setTests(res.data))
-      .catch(err => console.error(err));
+    const fetchProductTests = async () => {
+      try {
+        const data = await getProductTests();
+        setProductTests(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching product tests:', error);
+        setLoading(false);
+      }
+    };
+    fetchProductTests();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div>
-      <h2>Resultados de Pruebas</h2>
+      <h1>Product Tests Page</h1>
       <ul>
-        {tests.map(test => (
-          <li key={test.id}>{test.result} - {test.date}</li>
+        {productTests.map(test => (
+          <li key={test.id}>
+            Tester ID: {test.testerId} - Product ID: {test.productId} - Rating: {test.rating}
+          </li>
         ))}
       </ul>
     </div>
   );
 };
 
-export default Tests;
+export default ProductTestsPage;

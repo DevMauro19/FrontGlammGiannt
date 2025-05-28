@@ -1,31 +1,38 @@
+
 import React, { useEffect, useState } from 'react';
-import API from '../api/axios';
+import { getProducts } from '../api/apiCalls';
+import { Product } from '../types/product';
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-}
-
-const Products: React.FC = () => {
+const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    API.get('/products')
-      .then(res => setProducts(res.data))
-      .catch(err => console.error(err));
+    const fetchProducts = async () => {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setLoading(false);
+      }
+    };
+    fetchProducts();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div>
-      <h2>Productos</h2>
+      <h1>Products Page</h1>
       <ul>
         {products.map(product => (
-          <li key={product.id}>{product.name} - ${product.price}</li>
+          <li key={product.id}>{product.name} - Stock: {product.stock}</li>
         ))}
       </ul>
     </div>
   );
 };
 
-export default Products;
+export default ProductsPage;
