@@ -1,29 +1,36 @@
+// src/App.tsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-
-import Home from './Pages/Home';
-import UsersPage from './Pages/UserPage';
-import Products from './Pages/Products';
-import Tests from './Pages/Tests';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import UsersPage from './Pages/UsersPage';
+import ProductsPage from './Pages/ProductsPage';
+import ProductTestsPage from './Pages/ProductTestsPage';
+import OrderTransactionsPage from './Pages/OrderTransactionsPage';
+import CreateUser from './components/CreateUser';
+import EditUser from './components/EditUser';
+import CreateProduct from './components/CreateProduct';
+import EditProduct from './components/EditProduct';
+import CreateProductTest from './components/CreateProductTest';
+import EditProductTest from './components/EditProductTest';
+import CreateOrderTransaction from './components/CreateOrderTransaction';
+import EditOrderTransaction from './components/EditOrderTransaction';
 
 const App: React.FC = () => {
   return (
     <Router>
-      <div>
-        <nav style={{ marginBottom: '2rem' }}>
-          <Link to="/" style={{ margin: '0 1rem' }}>Inicio</Link>
-          <Link to="/users" style={{ margin: '0 1rem' }}>Usuarios</Link>
-          <Link to="/products" style={{ margin: '0 1rem' }}>Productos</Link>
-          <Link to="/tests" style={{ margin: '0 1rem' }}>Pruebas</Link>
-        </nav>
-
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/users" element={<UsersPage />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/tests" element={<Tests />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/users" element={<UsersPage />} />
+        <Route path="/users/create" element={<CreateUser />} />
+        <Route path="/users/edit/:id" element={<EditUser />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/products/create" element={<CreateProduct />} />
+        <Route path="/products/edit/:id" element={<EditProduct />} />
+        <Route path="/product-tests" element={<ProductTestsPage />} />
+        <Route path="/product-tests/create" element={<CreateProductTest />} />
+        <Route path="/product-tests/edit/:id" element={<EditProductTest />} />
+        <Route path="/order-transactions" element={<OrderTransactionsPage />} />
+        <Route path="/order-transactions/create" element={<CreateOrderTransaction />} />
+        <Route path="/order-transactions/edit/:id" element={<EditOrderTransaction />} />
+      </Routes>
     </Router>
   );
 };
